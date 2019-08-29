@@ -215,6 +215,11 @@ gst_droidcamsrc_init (GstDroidCamSrc * src)
   src->preview_pipeline =
       gst_camerabin_create_preview_pipeline (GST_ELEMENT_CAST (src), NULL);
 
+  /* Allow appsink to go synchronously to GST_STATE_PLAYING. This make preview
+   * processing go faster on first image capture.
+   */
+  g_object_set (src->preview_pipeline->appsink, "async", FALSE, NULL);
+
   GST_OBJECT_FLAG_SET (src, GST_ELEMENT_FLAG_SOURCE);
 }
 
