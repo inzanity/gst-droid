@@ -288,7 +288,7 @@ gst_droidcamsrc_dev_preview_frame_callback (void *user,
   gsize width, height;
   DroidMediaRect rect;
 
-  GST_DEBUG_OBJECT (src, "dev preview frame callback");
+  GST_LOG_OBJECT (src, "dev preview frame callback");
 
   pool = gst_object_ref (dev->raw_pool);
   gst_buffer_pool_acquire_buffer (pool, &buffer, NULL);
@@ -491,7 +491,7 @@ gst_droidcamsrc_dev_frame_available (void *user, DroidMediaBuffer * buffer)
   GstBufferPool *pool;
   DroidMediaBufferInfo info;
 
-  GST_DEBUG_OBJECT (src, "frame available");
+  GST_LOG_OBJECT (src, "frame available");
 
   droid_media_buffer_get_info (buffer, &info);
 
