@@ -358,7 +358,7 @@ gst_droidcamsrc_set_property (GObject * object, guint prop_id,
 
   switch (prop_id) {
     case PROP_CAMERA_DEVICE:
-      src->camera_device = g_value_get_enum (value);
+      src->camera_device = g_value_get_int (value);
       g_rec_mutex_lock (&src->dev_lock);
       if (src->dev && src->dev->info) {
         GST_WARNING_OBJECT (src,
@@ -459,7 +459,8 @@ gst_droidcamsrc_set_property (GObject * object, guint prop_id,
         new_caps = gst_caps_ref (new_caps);
       }
 
-      if (!gst_caps_is_equal (src->preview_caps, new_caps)) {
+      if (!src->preview_caps
+          || !gst_caps_is_equal (src->preview_caps, new_caps)) {
         gst_caps_replace (&src->preview_caps, new_caps);
 
         if (src->preview_pipeline) {
@@ -472,7 +473,6 @@ gst_droidcamsrc_set_property (GObject * object, guint prop_id,
       } else {
         GST_DEBUG_OBJECT (src, "New preview caps equal current preview caps");
       }
-      gst_caps_unref (new_caps);
     }
       break;
 
@@ -2606,7 +2606,7 @@ gst_droidcamsrc_get_video_caps_locked (GstDroidCamSrc * src)
 
   for (x = 0; x < gst_caps_get_size (encoded); x++) {
     data.encoded = gst_caps_get_structure (encoded, x);
-    gst_caps_foreach (tpl, __map, &data);
+    gst_caps_foreach (tpl, (GstCapsForeachFunc) __map, &data);
   }
 
   caps = gst_caps_merge (caps, tpl);
